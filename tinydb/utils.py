@@ -74,6 +74,11 @@ class FrozenDict(dict):
 
     def __hash__(self):
         return hash(tuple(sorted(self.items())))
+
+    @staticmethod
+    def _immutable(*args, **kws):
+        raise TypeError('object is immutable')
+
     __setitem__ = _immutable
     __delitem__ = _immutable
     clear = _immutable
