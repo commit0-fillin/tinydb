@@ -17,7 +17,12 @@ def touch(path: str, create_dirs: bool):
     :param path: The file to create.
     :param create_dirs: Whether to create all missing parent directories.
     """
-    pass
+    if create_dirs:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+    
+    if not os.path.exists(path):
+        with open(path, 'a'):
+            os.utime(path, None)
 
 class Storage(ABC):
     """
@@ -36,7 +41,7 @@ class Storage(ABC):
 
         Return ``None`` here to indicate that the storage is empty.
         """
-        pass
+        raise NotImplementedError("This method needs to be implemented by a subclass")
 
     @abstractmethod
     def write(self, data: Dict[str, Dict[str, Any]]) -> None:
@@ -47,13 +52,14 @@ class Storage(ABC):
 
         :param data: The current state of the database.
         """
-        pass
+        raise NotImplementedError("This method needs to be implemented by a subclass")
 
     def close(self) -> None:
         """
         Optional: Close open file handles, etc.
         """
-        pass
+        # This is an optional method, so we'll leave it as a no-op
+        # Subclasses can override this if they need to close resources
 
 class JSONStorage(Storage):
     """
